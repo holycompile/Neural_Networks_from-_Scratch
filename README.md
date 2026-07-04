@@ -26,7 +26,7 @@ Neural_Network_from_Scratch/
 
 ---
 
-## 🧠 Step-by-Step Evolution & Neural Diagrams
+## 🧠 Step-by-Step Evolution & Compact Neural Diagrams
 
 ### Level 1: The Fundamental Single Neuron
 📄 **File:** [neuron1.py](file:///c:/Users/User/OneDrive/Desktop/Neural_Network_from_Scratch/prototype/neuron1.py)
@@ -38,26 +38,13 @@ $$y = \sum_{i=1}^{n} (x_i \cdot w_i) + b$$
 #### 📊 Architecture Diagram
 ```mermaid
 graph LR
-    subgraph Inputs
-        X1((x1: 1.0))
-        X2((x2: 2.0))
-        X3((x3: 3.0))
-        X4((x4: 2.5))
-    end
+    X["Inputs (1x4)"] -->|Weights| N(("Σ + Bias"))
+    Bias(("Bias: 2.0")) --> N
+    N --> Out["Output: 4.8"]
 
-    subgraph Neuron
-        N((Σ + Bias))
-    end
-
-    X1 -->|w1: 0.2| N
-    X2 -->|w2: 0.8| N
-    X3 -->|w3: -0.5| N
-    X4 -->|w4: 1.0| N
-    Bias((Bias: 2.0)) --> N
-    N --> Output([Output: 4.8])
-
+    style X fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
     style N fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style Output fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style Out fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
 ```
 
 *   **Key Concept:** Manual iteration over inputs and weights using a `for` loop.
@@ -75,44 +62,13 @@ To form a fully connected (dense) layer, we combine multiple neurons that all re
 #### 📊 Architecture Diagram
 ```mermaid
 graph LR
-    subgraph Inputs
-        X1((x1: 1.0))
-        X2((x2: 2.0))
-        X3((x3: 3.0))
-        X4((x4: 2.5))
-    end
+    X["Inputs (1x4)"] -->|Weights| Layer["Dense Layer (3 Neurons)"]
+    Biases["Biases: 2.0, 3.0, 0.5"] --> Layer
+    Layer --> Out["Outputs: 4.8, 1.21, 2.385"]
 
-    subgraph Dense Layer
-        N1((Neuron 1))
-        N2((Neuron 2))
-        N3((Neuron 3))
-    end
-
-    subgraph Biases
-        B1((b1: 2.0))
-        B2((b2: 3.0))
-        B3((b3: 0.5))
-    end
-
-    X1 --> N1; X1 --> N2; X1 --> N3
-    X2 --> N1; X2 --> N2; X2 --> N3
-    X3 --> N1; X3 --> N2; X3 --> N3
-    X4 --> N1; X4 --> N2; X4 --> N3
-
-    B1 --> N1
-    B2 --> N2
-    B3 --> N3
-
-    N1 --> O1([Out 1: 4.8])
-    N2 --> O2([Out 2: 1.21])
-    N3 --> O3([Out 3: 2.385])
-
-    style N1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style N2 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style N3 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style O1 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
-    style O2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
-    style O3 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style X fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
+    style Layer fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    style Out fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
 ```
 
 *   **Key Concept:** Coding three neurons manually without helper libraries. Shows why hardcoding calculations becomes unmanageable as networks grow.
@@ -125,22 +81,18 @@ graph LR
 Rather than writing manual loops, we express the weighted sum of a neuron as a dot product between the input vector $\vec{x}$ and weight vector $\vec{w}$.
 
 #### 📊 Architecture Diagram
-*(Mathematically identical to Level 1, optimized using vector dot products)*
 ```mermaid
 graph LR
-    subgraph Inputs Vector x
-        X[Inputs: 1.0, 2.0, 3.0, 2.5]
-    end
-    subgraph Weights Vector w
-        W[Weights: 0.2, 0.8, -0.5, 1.0]
-    end
-    X & W --> Dot["Dot Product: x · w"]
-    Bias((Bias: 2.0)) --> Add[+]
+    X["Inputs x: 1.0, 2.0, 3.0, 2.5"] --> Dot["Dot Product: x · w"]
+    W["Weights w: 0.2, 0.8, -0.5, 1.0"] --> Dot
+    Bias["Bias: 2.0"] --> Add["+"]
     Dot --> Add
-    Add --> Output([Output: 4.8])
-    
+    Add --> Out["Output: 4.8"]
+
+    style X fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
+    style W fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
     style Add fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style Output fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style Out fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
 ```
 
 *   **Key Concept:** Introduction of `numpy` for performance and readability.
@@ -155,22 +107,18 @@ graph LR
 Instead of a single weight vector, we group the weights of all neurons in a layer into a 2D weight matrix ($W$). We calculate the entire layer's output using a single matrix-vector multiplication.
 
 #### 📊 Architecture Diagram
-*(Mathematically identical to Level 2, optimized using a weight matrix)*
 ```mermaid
 graph LR
-    subgraph Input Vector x
-        X[Inputs: [1.0, 2.0, 3.0, 2.5]]
-    end
-    subgraph Weights Matrix W
-        W_Mat["W = [ [w1.1, w1.2, w1.3, w1.4], <br> [w2.1, w2.2, w2.3, w2.4], <br> [w3.1, w3.2, w3.3, w3.4] ]"]
-    end
-    X & W_Mat --> Dot["Matrix Mult: W · x"]
-    Biases["Biases: [2.0, 3.0, 0.5]"] --> Add[+]
+    X["Inputs x (1x4)"] --> Dot["np.dot(W, x)"]
+    W_Mat["Weights W (3x4 Matrix)"] --> Dot
+    Biases["Biases: 2.0, 3.0, 0.5"] --> Add["+"]
     Dot --> Add
-    Add --> Output(["Outputs: [4.8, 1.21, 2.385]"])
-    
+    Add --> Out["Outputs: 4.8, 1.21, 2.385"]
+
+    style X fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
+    style W_Mat fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
     style Add fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style Output fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style Out fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
 ```
 
 *   **Key Concept:** `np.dot(weights, inputs)` maps multiple weight vectors against a single input vector.
@@ -185,32 +133,16 @@ In practice, neural networks process multiple samples at once (a "batch") to lev
 #### 📊 Architecture Diagram
 ```mermaid
 graph LR
-    subgraph Inputs Matrix X (3x4)
-        direction TB
-        S1["Sample 1: [1.0, 2.0, 3.0, 2.5]"]
-        S2["Sample 2: [2.0, 5.0, -1.0, 2.0]"]
-        S3["Sample 3: [-1.5, 2.7, 3.3, -0.8]"]
-    end
+    X_Mat["Inputs X (3x4 Matrix)"] --> Dot["np.dot(X, W.T)"]
+    W_Mat["Weights W (3x4 Matrix)"] --> Dot
+    Biases["Biases: 2.0, 3.0, 0.5"] --> Add["+"]
+    Dot --> Add
+    Add --> Out["Outputs (3x3 Matrix)"]
 
-    subgraph Matrix Multiply & Transpose
-        direction TB
-        Dot["X (3x4) ⊙ W.T (4x3)"]
-    end
-
-    subgraph Biases Broadcasting
-        B["Biases: [2.0, 3.0, 0.5] (1x3)"]
-    end
-
-    subgraph Outputs Matrix (3x3)
-        direction TB
-        O1["[4.8,  1.21,  2.385] (Sample 1 Out)"]
-        O2["[3.2, -0.7,   0.91]  (Sample 2 Out)"]
-        O3["[0.16, 5.405, 0.509] (Sample 3 Out)"]
-    end
-
-    Inputs_Matrix_X --> Dot
-    Biases_Broadcasting --> Dot
-    Dot --> Outputs_Matrix
+    style X_Mat fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
+    style W_Mat fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
+    style Add fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    style Out fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
 ```
 
 *   **Key Concept:** Transposing the weight matrix ($W^T$) to perform matrix multiplication:
@@ -227,41 +159,14 @@ Here, we chain two dense layers together. The outputs of the first layer become 
 #### 📊 Architecture Diagram
 ```mermaid
 graph LR
-    subgraph Inputs X (3x4)
-        direction TB
-        X_in["3 Batch Samples <br> (4 Features each)"]
-    end
+    X["Inputs (3x4 Matrix)"] --> L1["Layer 1 (3 Neurons)"]
+    L1 --> L2["Layer 2 (3 Neurons)"]
+    L2 --> Out["Outputs (3x3 Matrix)"]
 
-    subgraph Layer 1 (Dense)
-        direction TB
-        L1N1((Neuron 1.1))
-        L1N2((Neuron 1.2))
-        L1N3((Neuron 1.3))
-    end
-
-    subgraph Layer 2 (Dense)
-        direction TB
-        L2N1((Neuron 2.1))
-        L2N2((Neuron 2.2))
-        L2N3((Neuron 2.3))
-    end
-
-    X_in --> L1N1 & L1N2 & L1N3
-    L1N1 & L1N2 & L1N3 --> L2N1 & L2N2 & L2N3
-
-    L2N1 --> Out1([Out Sample 1])
-    L2N2 --> Out2([Out Sample 2])
-    L2N3 --> Out3([Out Sample 3])
-
-    style L1N1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style L1N2 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style L1N3 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style L2N1 fill:#f5f5f5,stroke:#616161,stroke-width:2px;
-    style L2N2 fill:#f5f5f5,stroke:#616161,stroke-width:2px;
-    style L2N3 fill:#f5f5f5,stroke:#616161,stroke-width:2px;
-    style Out1 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
-    style Out2 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
-    style Out3 fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style X fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
+    style L1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    style L2 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    style Out fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
 ```
 
 *   **Key Concept:** Feeding layer outputs sequentially to create hierarchical representations:
@@ -278,39 +183,14 @@ Instead of manually managing matrices for every layer, we encapsulate the logic 
 #### 📊 Architecture Diagram
 ```mermaid
 graph LR
-    subgraph Inputs X (3x4)
-        direction TB
-        X_in["Features: [f1, f2, f3, f4]"]
-    end
+    X["Inputs (3x4 Matrix)"] --> L1["Layer 1 (5 Neurons)"]
+    L1 --> L2["Layer 2 (2 Neurons)"]
+    L2 --> Out["Outputs (3x2 Matrix)"]
 
-    subgraph Layer 1: Dense (4 -> 5)
-        direction TB
-        H1((H1))
-        H2((H2))
-        H3((H3))
-        H4((H4))
-        H5((H5))
-    end
-
-    subgraph Layer 2: Dense (5 -> 2)
-        direction TB
-        O1((O1))
-        O2((O2))
-    end
-
-    X_in --> H1 & H2 & H3 & H4 & H5
-    H1 & H2 & H3 & H4 & H5 --> O1 & O2
-
-    O1 & O2 --> Outputs["Final Output (3x2)"]
-
-    style H1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style H2 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style H3 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style H4 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style H5 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
-    style O1 fill:#f5f5f5,stroke:#616161,stroke-width:2px;
-    style O2 fill:#f5f5f5,stroke:#616161,stroke-width:2px;
-    style Outputs fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
+    style X fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px;
+    style L1 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    style L2 fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
+    style Out fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px;
 ```
 
 *   **Key Concept:** Object-oriented modularity.
@@ -328,8 +208,7 @@ A blank slate representing the logical next step: introducing non-linear activat
 #### 📊 Concept Diagram
 ```mermaid
 graph LR
-    Z((Pre-Activation z)) --> Act{Activation f}
-    Act --> A((Post-Activation a))
+    Z["Pre-Activation z"] --> Act["Activation f"] --> A["Post-Activation a"]
 
     style Z fill:#e1f5fe,stroke:#01579b,stroke-width:2px;
     style Act fill:#fff9c4,stroke:#fbc02d,stroke-width:2px;
